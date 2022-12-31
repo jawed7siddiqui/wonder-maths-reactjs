@@ -1,4 +1,7 @@
 import * as React from 'react';
+import {useState} from 'react';
+import axios from 'axios';
+
 import PropTypes from 'prop-types';
 import {
     AppBar,
@@ -78,6 +81,23 @@ function Dashboard(props) {
         setOpen(false);
     };
 
+    const [mobile, setMobile] = useState('');
+    const [msg, setMsg] = useState('');
+
+    const handleTextInputChange = event => {
+        setMobile(event.target.value);
+    };
+
+    const handlelogin = () => {
+        axios.post(process.env.REACT_APP_REST_API + 'customer/login',{ mobile_no:mobile}, {
+            'Content-Type': 'application/json',
+          })
+          .then((res) => {
+              console.log(res.data);
+              setMsg(res.data['message']);
+          });
+    };
+
     return (
         <Box sx={{ display: 'flex' }}>
             {/* dialog */}
@@ -101,7 +121,7 @@ function Dashboard(props) {
                                             </Grid>
                                             <Grid item xs={4} sx={{ textAlign: 'center' }}>
                                                 <Typography variant="h1" className="dialogTitle">
-                                                    Sign In
+                                                    Sign In {mobile}
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={4} sx={{ textAlign: 'right' }}>
@@ -117,7 +137,7 @@ function Dashboard(props) {
                                             <br />
                                             <TextField
                                                 fullWidth
-                                                placeholder="Enter PhoneNumber"
+                                                placeholder="+91xxxxxxxxxx"
                                                 sx={{
                                                     '& .MuiInputBase-root': {
                                                         width: '100%',
@@ -128,10 +148,12 @@ function Dashboard(props) {
                                                         background: '#EFF2FC'
                                                     }
                                                 }}
+
+                                                onChange= {handleTextInputChange}
                                             />
                                             <Button
                                                 className="primary mainButton fullwidth"
-                                                onClick={() => setModalContent('signup')}
+                                                onClick={() => {handlelogin();setModalContent('signup')}}
                                                 style={{ margin: 'auto' }}
                                             >
                                                 Sign in
@@ -171,7 +193,12 @@ function Dashboard(props) {
                                     </Box>
                                     <DialogContent>
                                         <DialogContentText id="alert-dialog-description" width="100%">
-                                            <Typography variant="h3">Register a new account</Typography>
+                                            <Typography variant="h3">
+                                                Register a new account                                              
+                                                </Typography>
+
+                                        <Typography variant="h6" color="blue">{msg}</Typography>
+
                                             <Button
                                                 className="primary mainButton fullwidth outlined"
                                                 onClick={() => setModalContent('actCode')}

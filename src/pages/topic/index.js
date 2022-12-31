@@ -34,7 +34,7 @@ const SamplePage = () => {
 
     const [list, setList] = useState([]);
     useEffect(() => {
-      axios.get(process.env.REACT_APP_REST_API + 'getTopic', {
+      axios.get(process.env.REACT_APP_REST_API + 'web/getTopic', {
           'Content-Type': 'application/json',
         })
         .then((res) => {

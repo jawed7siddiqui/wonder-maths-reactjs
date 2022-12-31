@@ -58,9 +58,13 @@ const SamplePage = () => {
     const [list, setList] = useState([]);
     const [details, setDetails] = useState([]);
     const [topic, setTopic] = useState('');
+    const [isactive, setIsactive] = useState('');
 
     useEffect(() => {
-      axios.get(process.env.REACT_APP_REST_API + 'getTopic', {
+
+        setIsactive(lastSegment);
+
+       axios.get(process.env.REACT_APP_REST_API + 'web/getTopic', {
           'Content-Type': 'application/json',
         })
         .then((res) => {
@@ -68,8 +72,8 @@ const SamplePage = () => {
           setList(res.data);
         });
 
-    
-        axios.get(process.env.REACT_APP_REST_API + 'getChapter/'+lastSegment, {
+        
+        axios.get(process.env.REACT_APP_REST_API + 'web/getChapter/'+lastSegment, {
             'Content-Type': 'application/json',
           })
           .then((res) => {
@@ -82,7 +86,8 @@ const SamplePage = () => {
 
     const handleClick= (topic) => {
         setTopic(topic);
-        axios.get(process.env.REACT_APP_REST_API + 'getChapter/'+topic, {
+        setIsactive(topic);
+        axios.get(process.env.REACT_APP_REST_API + 'web/getChapter/'+topic, {
             'Content-Type': 'application/json',
           })
           .then((res) => {
@@ -93,7 +98,7 @@ const SamplePage = () => {
     };
 
 
-    const active = 'caliculus';
+    const active = isactive;
     const activeStyle = {
         height: '40px',
         marginTop: '15px',
