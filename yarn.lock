@@ -8262,6 +8262,11 @@ react-is@^18.0.0, react-is@^18.2.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-mui-stepper@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/react-mui-stepper/-/react-mui-stepper-0.1.7.tgz#f17f34b7844b75ff562a36fd6049989b6c69fe09"
+  integrity sha512-Si6zjsGVG7UyTnqU9atN6BNJkZYjljGKJFdjsdU64SrYe0N8l5o26nv3OYvZoKYxeD68eUVVmCnj/sTbWoOe+Q==
+
 react-number-format@^4.9.4:
   version "4.9.4"
   resolved "https://registry.npmjs.org/react-number-format/-/react-number-format-4.9.4.tgz"

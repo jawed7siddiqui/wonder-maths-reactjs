@@ -33,11 +33,14 @@ function a11yProps(index) {
     };
 }
 
-export default function SimpleTabs() {
+export default function SimpleTabs(props) {
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    // console.log(props);
+
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -50,11 +53,11 @@ export default function SimpleTabs() {
             <TabPanel value={value} index={0}>
                 <VideoPanel />
             </TabPanel>
-            <TabPanel value={value} index={1}>
-                <AptitudPanel />
+            <TabPanel value={value} index={1} >
+                <AptitudPanel datatype={'aptitude'} dataclassname ={props.dataclassname} datavalue={props.datavalue} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <MentalPanel />
+                <MentalPanel datatype={'mental'} dataclassname ={props.dataclassname} datavalue={props.datavalue} />
             </TabPanel>
         </Box>
     );
