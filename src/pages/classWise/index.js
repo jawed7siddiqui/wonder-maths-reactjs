@@ -46,7 +46,7 @@ const SamplePage = () => {
                             label="State"
                         />
                         <FormControlLabel
-                            value="CBSC"
+                            value="CBSE"
                             control={
                                 <Radio
                                     sx={{
@@ -57,7 +57,7 @@ const SamplePage = () => {
                                     }}
                                 />
                             }
-                            label="CBSC"
+                            label="CBSE"
                         />
                     </RadioGroup>
                 </FormControl>
