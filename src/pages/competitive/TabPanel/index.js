@@ -32,7 +32,7 @@ function a11yProps(index) {
     };
 }
 
-export default function SimpleTabs() {
+export default function SimpleTabs(props) {
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -46,10 +46,10 @@ export default function SimpleTabs() {
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                <AptitudPanel />
+                <AptitudPanel datatype={'aptitude'}  datavalue={props.datavalue} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <MentalPanel />
+                <MentalPanel datatype={'mental'}  datavalue={props.datavalue} />
             </TabPanel>
         </Box>
     );

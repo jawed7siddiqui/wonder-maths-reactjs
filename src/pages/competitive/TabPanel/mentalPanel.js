@@ -1,23 +1,90 @@
-import { useState } from 'react';
+import { React, useEffect, useState } from 'react';
+import axios from 'axios';
 // material-ui
-import { Typography, Grid, Select, MenuItem, FormControl, Button, Divider, FormGroup } from '@mui/material';
+import { Typography, Grid, Select, MenuItem, FormControl, FormControlLabel, Button, Divider, Checkbox, FormGroup } from '@mui/material';
 
-// component import
-import Checkbox from 'components/CheckBoxItem';
+// project import
 
 import HeaderCard from 'components/HeaderCard';
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const SamplePage = () => {
+const SamplePage = (props) => {
     const [age, setAge] = useState(0);
+    const [iv, setIv] = useState(0);
+    const [showAnswer, setShowAnswer] = useState(true);
+    const [sh, setSh] = useState(false);
+
+    const [testdata, setTestdata] = useState([]);
+    const [pprdata, setPprdata] = useState([]);
+    const dataSet = [];
+    
+    console.log(props);
     const handleChange = (event) => {
         setAge(event.target.value);
+        setShowAnswer(true);      
+
+        axios.get(process.env.REACT_APP_REST_API + 'customer/testpaper?id='+event.target.value+'&type=mental', {
+            'Content-Type': 'application/json',
+          })
+          .then((res) => {
+              console.log(res.data);
+              setPprdata(res.data);
+              setIv(0);   
+
+              if(res.data.length > 0){
+              setSh(true)
+              }else{
+              setSh(false)
+
+              }
+          });
     };
-    const dataSet = [
-        { label: 'Jason Killian', name: 'Jason Killian' },
-        { label: 'Gilad Gray', name: 'Gilad Gray' },
-        { label: 'Antoine Llorca', name: 'Antoine Llorca' }
-    ];
+
+    const pdata = pprdata[iv];
+    // if(pdata){
+        
+    //     dataSet.push({ label: pdata.o[0]?.op, value: pdata.o[0]?.on },
+    //     { label: pdata.o[1]?.op, value: pdata.o[1]?.on },
+    //     { label: pdata.o[2]?.op, value: pdata.o[2]?.on },
+    //     { label: pdata.o[3]?.op, value: pdata.o[3]?.on })
+
+    // }
+
+    const handleShow= () => {
+        setShowAnswer(false);      
+    };
+
+
+    const handleNext= () => {
+        setShowAnswer(true);   
+
+        if(iv < 9){
+        setIv(iv+1);
+        }      
+    };
+
+    const handlePrev= () => {
+        setShowAnswer(true);   
+
+        if(iv != 0){
+        setIv(iv-1);   
+        }   
+    };
+
+    useEffect(() => {
+
+        axios.get(process.env.REACT_APP_REST_API + 'customer/test/list?type='+props.datatype+'&p1='+props.datavalue, {
+           'Content-Type': 'application/json',
+         })
+         .then((res) => {
+             console.log(res.data);
+             setTestdata(res.data);
+         });
+ 
+       
+ 
+     }, [props.datavalue,props.dataclassname]);
+
     return (
         <Grid container rowSpacing={4.5} columnSpacing={2.75}>
             {/* row 1 */}
@@ -26,47 +93,65 @@ const SamplePage = () => {
                 <FormControl style={{ minWidth: '150px' }}>
                     <Select labelId="demo-simple-select-label" id="demo-simple-select" value={age} onChange={handleChange}>
                         <MenuItem value={0}>Select</MenuItem>
-                        <MenuItem value={10}>Test 1: Fractions</MenuItem>
-                        <MenuItem value={20}>Test 2: Fractions</MenuItem>
-                        <MenuItem value={30}>Test 3: Fractions</MenuItem>
+                        {testdata.map(item => {
+                     return <MenuItem value={item.id}>{item.test_name}</MenuItem>;
+                        })}
                     </Select>
                 </FormControl>
             </Grid>
             {/* row 2 */}
-            <Grid item xs={12} sx={{ mb: -2.25 }}>
-                <Typography variant="h3">here is problem</Typography>
-            </Grid>
             <Grid item xs={12} md={12} lg={12}>
+            { sh &&
                 <HeaderCard>
-                    <Typography variant="h5" style={{ margin: '20px' }}>
-                        this is the title pf problem
+                    <Typography variant="h3" style={{ margin: '20px' }} dangerouslySetInnerHTML={{ __html: pdata?.q }}>
+                      
                     </Typography>
-                    <FormControl component="fieldset">
-                        <FormGroup>
-                            {dataSet.map((data, idx) => {
-                                return <Checkbox item={data} key={idx} />;
-                            })}
-                        </FormGroup>
-                    </FormControl>
+                    {/* <RadioGroup dataSet={dataSet} name="level" /> */}
+                 
+                    <div>
+                    <input type="checkbox" value={pdata.o[0]?.on} name="ans[]" style={{border: '0px', width: '3%',height: '1.5em'}} /> <span dangerouslySetInnerHTML={{ __html: pdata.o[0]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
+                    <input type="checkbox" value={pdata.o[1]?.on} name="ans[]" style={{border: '0px', width: '3%',height: '1.5em'}} /> <span dangerouslySetInnerHTML={{ __html: pdata.o[1]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
+                    <input type="checkbox" value={pdata.o[2]?.on} name="ans[]" style={{border: '0px', width: '3%',height: '1.5em'}} /> <span dangerouslySetInnerHTML={{ __html: pdata.o[2]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
+                    <input type="checkbox" value={pdata.o[3]?.on} name="ans[]" style={{border: '0px', width: '3%',height: '1.5em'}} /> <span dangerouslySetInnerHTML={{ __html: pdata.o[3]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
+                  
+                     </div>
                     <Divider />
-                    <Button variant="outlined" size="large" color="success">
-                        Check your answer
-                    </Button>
+
+                     
+                    <><Button variant="outlined" size="large" color="success" onClick={handleShow}>
+                            Check your answer
+                        </Button><Button style={{ float: 'right' }} variant="contained" size="large" color="primary" onClick={handleNext}>
+                                {'>'}
+                            </Button><Typography variant="h6" style={{ float: 'right', margin: '20px' }}>
+                                {iv + 1}/10
+                            </Typography><Button style={{ float: 'right' }} variant="contained" size="large" color="primary" onClick={handlePrev}>
+                                {'<'}
+                            </Button></>
+
+
+
+                    
+
                 </HeaderCard>
-                <HeaderCard>
+                        }
+
+                {/* {showAnswer && */}
+                <HeaderCard hidden={showAnswer}>
                     <Typography variant="h3" style={{ margin: '20px' }}>
-                        answer
+                        Answer
                     </Typography>
-                    <Typography variant="body2" style={{ margin: '20px' }}>
-                        this is the answer pf problem this is the answer pf problem this is the answer pf problem
+                    <Typography variant="body2" style={{ margin: '20px' }} dangerouslySetInnerHTML={{ __html: pdata?.c }}>
+ 
                     </Typography>
                     <Typography variant="h5" style={{ margin: '20px' }}>
-                        description
+                        Description
                     </Typography>
-                    <Typography variant="body2" style={{ margin: '20px' }}>
-                        this is the answer pf problem this is the answer pf problem this is the answer pf problem
+                    <Typography variant="body2" style={{ margin: '20px' }} dangerouslySetInnerHTML={{ __html: pdata?.e }}>
+                   
+
                     </Typography>
                 </HeaderCard>
+               {/* } */}
             </Grid>
         </Grid>
     );

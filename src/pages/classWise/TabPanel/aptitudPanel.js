@@ -72,19 +72,7 @@ const SamplePage = (props) => {
         }   
     };
 
-    
-    // const dataSet = [
-    //     { label: 'this is option 1', value: '111' },
-    //     { label: 'this is option 2', value: '222' },
-    //     { label: 'this is option 3', value: '333' },
-    //     { label: 'this is option 4', value: '444' }
 
-        // { label: pdata.o[0]?.op, value: pdata.o[0]?.on },
-        // { label: pdata.o[1]?.op, value: pdata.o[1]?.on },
-        // { label: pdata.o[2]?.op, value: pdata.o[2]?.on },
-        // { label: pdata.o[3]?.op, value: pdata.o[3]?.on },
-
-    // ];
 
     useEffect(() => {
 
