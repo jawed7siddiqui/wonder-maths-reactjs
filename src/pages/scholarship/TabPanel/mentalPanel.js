@@ -2,7 +2,20 @@ import { React, useEffect, useState } from 'react';
 import axios from 'axios';
 // material-ui
 import { Typography, Grid, Select, MenuItem, FormControl, FormControlLabel, Button, Divider, Checkbox, FormGroup } from '@mui/material';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  height: 400,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+};
 // project import
 
 import HeaderCard from 'components/HeaderCard';
@@ -11,11 +24,23 @@ import HeaderCard from 'components/HeaderCard';
 const SamplePage = (props) => {
     const [age, setAge] = useState(0);
     const [iv, setIv] = useState(0);
+    const [count, setCount] = useState(0);
     const [showAnswer, setShowAnswer] = useState(true);
     const [sh, setSh] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [result, setResult] = useState(0);
+    // const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+      setOpen(false);
+      setSh(false)
+      setShowAnswer(true);      
+
+    }
 
     const [testdata, setTestdata] = useState([]);
     const [pprdata, setPprdata] = useState([]);
+    const [score, setScore] = useState(0);
     const dataSet = [];
     
     console.log(props);
@@ -27,7 +52,7 @@ const SamplePage = (props) => {
             'Content-Type': 'application/json',
           })
           .then((res) => {
-              console.log(res.data);
+            //   console.log(res.data);
               setPprdata(res.data);
               setIv(0);   
 
@@ -71,6 +96,70 @@ const SamplePage = (props) => {
         }   
     };
 
+    const dataScore = [];
+
+    const handleScore= (e) => {
+        // console.log(id+'----'+ans);      
+       console.log(JSON.parse(e.target.value));   
+     //  setScore(JSON.parse(e.target.value))   
+    //  score.push(JSON.parse(e.target.value));
+     //  console.log(pprdata); 
+
+
+      const edata = JSON.parse(e.target.value);
+
+      pprdata.forEach((el)=>{
+        if(el.id == edata.qId){
+
+          
+
+            if(el.c == edata.selected){
+              //  console.log(el.o[edata.selected-1].isChecked = true);
+              //  console.log(el.o);
+            //   setIsChecked(true)
+
+                  // el.o[edata.selected-1].isChecked = true
+
+                  el.right = 1;
+                //   pprdata[el.id].push(el);
+
+                // pprdata[0].push({'id':el.id,'ans':1})
+                setCount(count+1)
+            }else{
+
+                el.right = 0;
+                // score[0].push({'id':el.id,'ans':0})
+
+                // el.o[edata.selected-1].isChecked = false
+                // pprdata[0].push(el)
+
+            }
+
+            el.o[edata.selected-1].isChecked = true
+
+            pprdata[0].push(el);
+
+
+        }
+    })
+
+    };
+
+    const handleResult= () => {
+        console.log(pprdata);  
+        
+        var r = 0;
+        for(var i = 0; i < pprdata.length; ++i){
+            if(pprdata[i].right == 1)
+              r++;
+            
+        }
+
+        setResult(r);
+        console.log('result>>>>> '+ result);  
+        setOpen(true);
+     };
+
     useEffect(() => {
 
         axios.get(process.env.REACT_APP_REST_API + 'customer/test/list?type='+props.datatype+'&p1='+props.datavalue, {
@@ -109,10 +198,38 @@ const SamplePage = (props) => {
                     {/* <RadioGroup dataSet={dataSet} name="level" /> */}
                  
                     <div>
-                    <input type="checkbox" value={pdata.o[0]?.on} name="ans[]" style={{border: '0px', width: '3%',height: '1.5em'}} /> <span dangerouslySetInnerHTML={{ __html: pdata.o[0]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
-                    <input type="checkbox" value={pdata.o[1]?.on} name="ans[]" style={{border: '0px', width: '3%',height: '1.5em'}} /> <span dangerouslySetInnerHTML={{ __html: pdata.o[1]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
-                    <input type="checkbox" value={pdata.o[2]?.on} name="ans[]" style={{border: '0px', width: '3%',height: '1.5em'}} /> <span dangerouslySetInnerHTML={{ __html: pdata.o[2]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
-                    <input type="checkbox" value={pdata.o[3]?.on} name="ans[]" style={{border: '0px', width: '3%',height: '1.5em'}} /> <span dangerouslySetInnerHTML={{ __html: pdata.o[3]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
+                    <input type="radio"
+                     value={[JSON.stringify({'selected':pdata.o[0]?.on,'qId':pdata?.id,'ans':pdata?.c})]} 
+                     name={"ans"+pdata?.id} 
+                     style={{border: '0px', width: '3%',height: '1.5em'}}
+                     onChange={handleScore}
+                     checked={pdata.o[0]?.isChecked}
+                      />
+                      <span dangerouslySetInnerHTML={{ __html: pdata.o[0]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
+              
+                    <input type="radio"
+                     value={[JSON.stringify({'selected':pdata.o[1]?.on,'qId':pdata?.id,'ans':pdata?.c})]}
+                      name={"ans"+pdata?.id} style={{border: '0px', width: '3%',height: '1.5em'}} 
+                      onChange={handleScore} 
+                      checked={pdata.o[1]?.isChecked}
+                      />
+                       <span dangerouslySetInnerHTML={{ __html: pdata.o[1]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
+                   
+                    <input type="radio"
+                     value={[JSON.stringify({'selected':pdata.o[2]?.on,'qId':pdata?.id,'ans':pdata?.c})]} 
+                     name={"ans"+pdata?.id} style={{border: '0px', width: '3%',height: '1.5em'}} 
+                     onChange={handleScore}
+                     checked={pdata.o[2]?.isChecked} 
+                     /> 
+                     <span dangerouslySetInnerHTML={{ __html: pdata.o[2]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
+                  
+                    <input type="radio" 
+                    value={[JSON.stringify({'selected':pdata.o[3]?.on,'qId':pdata?.id,'ans':pdata?.c})]}
+                     name={"ans"+pdata?.id} style={{border: '0px', width: '3%',height: '1.5em'}} 
+                     onChange={handleScore} 
+                     checked={pdata.o[3]?.isChecked}
+                     /> 
+                     <span dangerouslySetInnerHTML={{ __html: pdata.o[3]?.op }} style={{position:'absolute',marginTop:'2px',marginLeft:'1%'}}></span> <br/><br/>
                   
                      </div>
                     <Divider />
@@ -120,7 +237,13 @@ const SamplePage = (props) => {
                      
                     <><Button variant="outlined" size="large" color="success" onClick={handleShow}>
                             Check your answer
-                        </Button><Button style={{ float: 'right' }} variant="contained" size="large" color="primary" onClick={handleNext}>
+                        </Button>
+                        &nbsp;&nbsp;&nbsp;
+                        <Button variant="contained" size="large" color="error" onClick={handleResult}>
+                            Submit
+                        </Button>
+                        
+                        <Button style={{ float: 'right' }} variant="contained" size="large" color="primary" onClick={handleNext}>
                                 {'>'}
                             </Button><Typography variant="h6" style={{ float: 'right', margin: '20px' }}>
                                 {iv + 1}/10
@@ -134,6 +257,35 @@ const SamplePage = (props) => {
 
                 </HeaderCard>
                         }
+
+
+       <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style} >
+        <Typography id="modal-modal-title" variant="h5" align="right" color="red" onClick={handleClose} style={{'position':'absolute','left':'95%','top':'1%'}} >
+            X
+          </Typography>
+        <Grid sx={{ my: 7 }}>
+          <Typography id="modal-modal-title" variant="h2" align="center" color="blue" >
+            Congratulations
+          </Typography>
+          <Typography id="modal-modal-description" variant="h5" align="center" color="blue" >
+            You have successfully completed your test.
+          </Typography>
+          
+          <Typography id="modal-modal-description" variant="h4" align="center" sx={{ my: 2 }} color="blue" >
+            Your score
+          </Typography>
+          <Typography id="modal-modal-description" variant="h1" align="center" sx={{ my:-2 }}>
+            {result}/10
+          </Typography>
+          </Grid>
+        </Box>
+      </Modal>
 
                 {/* {showAnswer && */}
                 <HeaderCard hidden={showAnswer}>
