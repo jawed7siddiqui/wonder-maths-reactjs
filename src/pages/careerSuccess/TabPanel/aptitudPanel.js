@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import { Typography, Grid, Select, MenuItem, FormControl, FormControlLabel, Radio, Button, Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import PDFViewer from 'pdf-viewer-reactjs'
+// import PDFViewer from 'pdf-viewer-reactjs'
 
 const style = {
   position: 'absolute',
@@ -217,12 +217,12 @@ const SamplePage = (props) => {
             <Grid item xs={12} md={12} lg={12}>
             { sh &&
                 <HeaderCard>
-                    
+{/*                     
                     <PDFViewer
                     document={{
                         url: 'https://arxiv.org/pdf/quant-ph/0410100.pdf',
                     }}
-                     />
+                     /> */}
 
                     
 
