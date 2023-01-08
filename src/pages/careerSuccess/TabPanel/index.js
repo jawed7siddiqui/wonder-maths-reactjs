@@ -51,7 +51,7 @@ export default function SimpleTabs() {
                 <VideoPanel />
             </TabPanel> */}
             <TabPanel value={value} index={0}>
-                <AptitudPanel datatype={'que'} datavalue={4} />
+                <AptitudPanel datatype={'que'} datavalue={5} />
             </TabPanel>
             {/* <TabPanel value={value} index={2}>
                 <MentalPanel />

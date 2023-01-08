@@ -16,6 +16,8 @@ const ScholarShip = Loadable(lazy(() => import('pages/scholarship')));
 const Competitive = Loadable(lazy(() => import('pages/competitive')));
 const QuestionBank = Loadable(lazy(() => import('pages/questionBank')));
 const SpeedMath = Loadable(lazy(() => import('pages/speedMath')));
+const CareerSuccess = Loadable(lazy(() => import('pages/careerSuccess')));
+
 const Topic = Loadable(lazy(() => import('pages/topic')));
 const TopicDetail = Loadable(lazy(() => import('pages/topic/detail')));
 
@@ -65,7 +67,7 @@ const MainRoutes = {
         },
         {
             path: '/career',
-            element: <ScholarShip />
+            element: <CareerSuccess />
         },
         {
             path: '/color',
