@@ -13,26 +13,55 @@ import TopicItem from 'components/TopicItem';
 const SamplePage = () => {
     const [age, setAge] = useState(0);
     const [clb, setClb] = useState('');
+    const [list, setList] = useState([]);
+    const data = [];
 
     const handleChange = (event) => {
         setAge(event.target.value);
+
+        if(event.target.value == 5){
+            data.push(
+               { name: 'algebra', url: 'algebra' },
+               { name: 'caliculus', url: 'caliculus' },
+            )         
+           
+       }else{
+   
+           data.push(
+               { name: 'caliculus', url: 'caliculus' },
+               { name: 'arithmetic', url: 'arithmetic' },
+
+            )  
+   
+       }
+           setList(data);
     };
+
 
     const clbhandleChange = (event) => {
         setClb(event.target.value);
+        // list.splice(index, 1);
+
+        if(event.target.value == 'CBSE'){
+         data.push(
+            { name: 'algebra', url: 'algebra' },
+            { name: 'arithmetic', url: 'arithmetic' },
+            { name: 'caliculus', url: 'caliculus' },
+         )         
+        
+    }else{
+
+        data.push(
+            { name: 'caliculus', url: 'caliculus' },
+         )  
+
+    }
+        setList(data);
+
     };
 
-    const data = [
-        { title: 'algebra', url: 'algebra' },
-        { title: 'arithmetic', url: 'arithmetic' },
-        { title: 'caliculus', url: 'caliculus' },
-        { title: 'number system', url: 'numbersystem' },
-        { title: 'set theory', url: 'settheory' },
-        { title: 'trigonometry', url: 'trigonometry' },
-        { title: 'probability', url: 'probability' }
-    ];
 
-    const [list, setList] = useState([]);
+
     useEffect(() => {
       axios.get(process.env.REACT_APP_REST_API + 'web/getTopic', {
           'Content-Type': 'application/json',
